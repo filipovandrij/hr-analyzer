@@ -107,13 +107,21 @@ const Navbar = () => {
       </List>
 
       <Divider sx={{ width: "80%" }} />
-
-      {/* Аватар профиля */}
-      <Avatar
-        alt="Profile"
-        src="/homer.png"
-        sx={{ width: 50, height: 50, mb: 2, mt: "auto" }}
-      ></Avatar>
+      <Link to="/account" style={{ textDecoration: "none" }}>
+        <Avatar
+          alt="Profile"
+          src="/homer.png"
+          sx={{
+            width: 50,
+            height: 50,
+            mb: 2,
+            mt: "auto",
+            cursor: "pointer",
+            transition: "transform 0.2s",
+            "&:hover": { transform: "scale(1.1)" },
+          }}
+        />
+      </Link>
     </Paper>
   );
 };
