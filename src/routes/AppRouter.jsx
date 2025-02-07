@@ -9,15 +9,14 @@ const AppRouter = () => {
   return (
     <Router>
       <Box sx={{ display: "flex", height: "100vh" }}>
-        <Navbar /> 
-        
-        <Box 
-          component="main" 
-          sx={{ 
-            flexGrow: 1, 
-            p: 3, 
-            ml: "80px",  
-            overflow: "auto" 
+        <Navbar />
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            ml: "80px",
+            overflow: "auto",
           }}
         >
           <Routes>
