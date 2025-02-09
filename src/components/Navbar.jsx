@@ -11,15 +11,18 @@ import {
 } from "@mui/material";
 import { Home, People, Work } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const menuItems = [
-  { text: "Home", icon: <Home />, path: "/" },
-  { text: "Candidates", icon: <People />, path: "/candidates" },
-  { text: "Vacancies", icon: <Work />, path: "/vacancies" },
+  { text: "home", icon: <Home />, path: "/" },
+  { text: "candidates", icon: <People />, path: "/candidates" },
+  { text: "vacancies", icon: <Work />, path: "/vacancies" },
 ];
 
 const Navbar = () => {
   const location = useLocation();
+
+  const { t } = useTranslation();
 
   return (
     <Paper
@@ -91,7 +94,7 @@ const Navbar = () => {
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText
-                  primary={item.text}
+                  primary={t(`${item.text}`)}
                   sx={{
                     textAlign: "center",
                     fontSize: "12px",
@@ -109,7 +112,7 @@ const Navbar = () => {
       <Divider sx={{ width: "80%" }} />
       <Link to="/account" style={{ textDecoration: "none" }}>
         <Avatar
-          alt="Profile"
+          alt={t("profile")}
           src="/homer.png"
           sx={{
             width: 50,

@@ -26,8 +26,14 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import DeleteIcon from "@mui/icons-material/Delete";
+import i18n from "i18next";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import EditIcon from "@mui/icons-material/Edit";
+import { useTranslation } from "react-i18next";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Autocomplete } from "@mui/material";
+import "../../locales/i18n";
 
 const skillOptions = [
   "JavaScript",
@@ -50,6 +56,7 @@ const skillOptions = [
 ];
 
 const AccountProfile = () => {
+  const { t } = useTranslation();
   const [profile, setProfile] = useState({
     position: "",
     category: "",
@@ -83,13 +90,68 @@ const AccountProfile = () => {
     endDate: null,
     company: "",
   });
+  const [editingExperience, setEditingExperience] = useState(null);
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+  };
 
-  const handleAddExperience = () => {
-    setProfile((prev) => ({
-      ...prev,
-      workExperience: [...prev.workExperience, newExperience],
-    }));
+  const validateFields = () => {
+    let isValid = true;
+
+    if (!newExperience.position.trim()) {
+      toast.error(t("enter_position"));
+      isValid = false;
+    }
+    if (!newExperience.company.trim()) {
+      toast.error(t("enter_company_name"));
+      isValid = false;
+    }
+    if (!newExperience.startDate) {
+      toast.error(t("select_start_date"));
+      isValid = false;
+    }
+    if (!newExperience.endDate) {
+      toast.error(t("select_end_date"));
+      isValid = false;
+    }
+    if (!newExperience.description.trim()) {
+      toast.error(t("enter_work_description"));
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const handleSaveProfile = () => {
+    toast.success(t("profile_successfully_saved"));
+  };
+  // Функция для редактирования опыта работы
+  const handleEditExperience = (index) => {
+    const experienceToEdit = profile.workExperience[index];
+    setNewExperience({ ...experienceToEdit });
+    setEditingExperience({ ...experienceToEdit, index });
+    setOpenModal(true);
+  };
+
+  const handleSaveExperience = () => {
+    if (!validateFields()) return;
+
+    setProfile((prev) => {
+      const updatedWorkExperience = [...prev.workExperience];
+
+      if (editingExperience !== null) {
+        updatedWorkExperience[editingExperience.index] = newExperience;
+        toast.success(t("changes_saved"));
+      } else {
+        updatedWorkExperience.push(newExperience);
+        toast.success(t("work_experience_added"));
+      }
+
+      return { ...prev, workExperience: updatedWorkExperience };
+    });
+
     setOpenModal(false);
+    setEditingExperience(null);
     setNewExperience({
       position: "",
       period: "",
@@ -109,8 +171,9 @@ const AccountProfile = () => {
   };
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", p: 2 }}>
+      <ToastContainer position="top-right" autoClose={3000} />
       <Typography variant="h4" gutterBottom>
-        Профиль соискателя
+        {t("profile_applicant")}
       </Typography>
       <Tabs
         sx={{
@@ -120,8 +183,9 @@ const AccountProfile = () => {
         value={tabValue}
         onChange={(e, newValue) => setTabValue(newValue)}
       >
-        <Tab label="Личные данные" />
-        <Tab label="Рабочие данные" />
+        <Tab label={t("personal_data")} />
+        <Tab label={t("work_data")} />
+        <Tab label={t("settings")} />
       </Tabs>
 
       {tabValue === 0 && (
@@ -143,7 +207,7 @@ const AccountProfile = () => {
           </Box>
           <TextField
             variant="standard"
-            label="Имя"
+            label={t("name")}
             name="name"
             value={profile.name}
             onChange={(e) => setProfile({ ...profile, name: e.target.value })}
@@ -151,7 +215,7 @@ const AccountProfile = () => {
           />
           <TextField
             variant="standard"
-            label="Фамилия"
+            label={t("surname")}
             name="surname"
             value={profile.surname}
             onChange={(e) =>
@@ -161,7 +225,7 @@ const AccountProfile = () => {
           />
           <TextField
             variant="standard"
-            label="Email"
+            label={t("email")}
             name="email"
             value={profile.email}
             onChange={(e) => setProfile({ ...profile, email: e.target.value })}
@@ -169,7 +233,7 @@ const AccountProfile = () => {
           />
           <TextField
             variant="standard"
-            label="Телефон"
+            label={t("phone")}
             name="phone"
             value={profile.phone}
             onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
@@ -177,7 +241,7 @@ const AccountProfile = () => {
           />
           <TextField
             variant="standard"
-            label="Telegram"
+            label={t("telegram")}
             name="telegram"
             value={profile.telegram}
             onChange={(e) =>
@@ -187,7 +251,7 @@ const AccountProfile = () => {
           />
           <TextField
             variant="standard"
-            label="WhatsApp"
+            label={t("whatsapp")}
             name="whatsapp"
             value={profile.whatsapp}
             onChange={(e) =>
@@ -197,7 +261,7 @@ const AccountProfile = () => {
           />
           <TextField
             variant="standard"
-            label="LinkedIn"
+            label={t("linkedin")}
             name="linkedin"
             value={profile.linkedin}
             onChange={(e) =>
@@ -207,7 +271,7 @@ const AccountProfile = () => {
           />
           <TextField
             variant="standard"
-            label="GitHub"
+            label={t("github")}
             name="github"
             value={profile.github}
             onChange={(e) => setProfile({ ...profile, github: e.target.value })}
@@ -218,7 +282,7 @@ const AccountProfile = () => {
             component="label"
             startIcon={<UploadFileIcon />}
           >
-            Загрузить резюме
+            {t("upload_resume")}
             <input
               type="file"
               hidden
@@ -227,8 +291,13 @@ const AccountProfile = () => {
               }
             />
           </Button>
-          <Button variant="contained" color="primary" fullWidth>
-            Сохранить изменения
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={handleSaveProfile}
+          >
+            {t("save_changes")}
           </Button>
         </Box>
       )}
@@ -237,7 +306,7 @@ const AccountProfile = () => {
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
           <TextField
             variant="standard"
-            label="Должность"
+            label={t("position")}
             name="position"
             value={profile.position}
             onChange={(e) =>
@@ -246,7 +315,7 @@ const AccountProfile = () => {
             fullWidth
           />
           <FormControl fullWidth>
-            <InputLabel>Категория</InputLabel>
+            <InputLabel>{t("category")}</InputLabel>
             <Select
               variant="standard"
               name="category"
@@ -255,13 +324,11 @@ const AccountProfile = () => {
                 setProfile({ ...profile, category: e.target.value })
               }
             >
-              <MenuItem value="IT">IT</MenuItem>
-              <MenuItem value="Marketing">Маркетинг</MenuItem>
-              <MenuItem value="Finance">Финансы</MenuItem>
+              <MenuItem value="IT">{t("it")}</MenuItem>
+              <MenuItem value="Marketing">{t("marketing")}</MenuItem>
+              <MenuItem value="Finance">{t("finance")}</MenuItem>
             </Select>
           </FormControl>
-
-          {/* Мультиселект для навыков */}
           <Autocomplete
             multiple
             options={skillOptions}
@@ -280,12 +347,11 @@ const AccountProfile = () => {
               ))
             }
             renderInput={(params) => (
-              <TextField {...params} variant="standard" label="Навыки" />
+              <TextField {...params} variant="standard" label={t("skills")} />
             )}
           />
-
           <Typography gutterBottom>
-            Опыт работы: {profile.experience} лет
+            {t("work_experience")} : {profile.experience}
           </Typography>
           <Slider
             min={1}
@@ -295,21 +361,26 @@ const AccountProfile = () => {
               setProfile({ ...profile, experience: newValue })
             }
           />
-
-          {/* Отображение списка опыта работы */}
           {profile.workExperience.map((exp, index) => (
             <Card key={index} sx={{ mt: 2 }}>
               <CardHeader
                 title={exp.position}
-                subheader={`Компания: ${
-                  exp.company || "Не указано"
-                } | Период: ${exp.startDate?.format("MM/YYYY") || "N/A"} - ${
-                  exp.endDate?.format("MM/YYYY") || "Настоящее время"
-                }`}
+                subheader={`${t("company")}: ${
+                  exp.company || t("not_specified")
+                } | ${t("period")}: ${
+                  exp.startDate?.format("MM/YYYY") || "N/A"
+                } - ${exp.endDate?.format("MM/YYYY") || t("current_time")}`}
                 action={
-                  <MuiIconButton onClick={() => handleDeleteExperience(index)}>
-                    <DeleteIcon />
-                  </MuiIconButton>
+                  <Box>
+                    <MuiIconButton onClick={() => handleEditExperience(index)}>
+                      <EditIcon />
+                    </MuiIconButton>
+                    <MuiIconButton
+                      onClick={() => handleDeleteExperience(index)}
+                    >
+                      <DeleteIcon />
+                    </MuiIconButton>
+                  </Box>
                 }
               />
               <CardContent>
@@ -319,20 +390,39 @@ const AccountProfile = () => {
           ))}
 
           <Button variant="contained" onClick={() => setOpenModal(true)}>
-            Добавить опыт работы
+            {t("add_work_experience")}
           </Button>
-          <Button variant="contained" color="primary" fullWidth>
-            Сохранить изменения
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={handleSaveProfile}
+          >
+            {t("save_changes")}
           </Button>
         </Box>
       )}
 
+      {tabValue === 2 && (
+        <Box>
+          <Button onClick={() => changeLanguage("en")}>🇬🇧 English</Button>
+          <Button onClick={() => changeLanguage("uk")}>🇺🇦 Українська</Button>
+          <Button onClick={() => changeLanguage("ru")}>🇷🇺 Русский</Button>
+          <Button onClick={() => changeLanguage("ge")}>🇬🇪 ქართული</Button>
+          <Button onClick={() => changeLanguage("de")}>🇩🇪 Deutsch</Button>
+        </Box>
+      )}
+
       <Dialog open={openModal} onClose={() => setOpenModal(false)}>
-        <DialogTitle>Добавить опыт работы</DialogTitle>
+        <DialogTitle>
+          {editingExperience !== null
+            ? t("edit_work_experience")
+            : t("add_work_experience")}
+        </DialogTitle>
         <DialogContent>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
             <TextField
-              label="Должность"
+              label={t("position")}
               fullWidth
               variant="standard"
               value={newExperience.position}
@@ -341,7 +431,7 @@ const AccountProfile = () => {
               }
             />
             <TextField
-              label="Компания"
+              label={t("company")}
               fullWidth
               variant="standard"
               value={newExperience.company}
@@ -352,7 +442,7 @@ const AccountProfile = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Box sx={{ display: "flex", gap: 2 }}>
                 <DatePicker
-                  label="Дата начала"
+                  label={t("start_date")}
                   value={newExperience.startDate}
                   onChange={(date) =>
                     setNewExperience({ ...newExperience, startDate: date })
@@ -360,7 +450,7 @@ const AccountProfile = () => {
                   renderInput={(params) => <TextField {...params} fullWidth />}
                 />
                 <DatePicker
-                  label="Дата окончания"
+                  label={t("end_date")}
                   value={newExperience.endDate}
                   onChange={(date) =>
                     setNewExperience({ ...newExperience, endDate: date })
@@ -370,7 +460,7 @@ const AccountProfile = () => {
               </Box>
             </LocalizationProvider>
             <TextField
-              label="Описание работы"
+              label={t("work_description")}
               fullWidth
               variant="standard"
               multiline
@@ -386,9 +476,9 @@ const AccountProfile = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenModal(false)}>Отмена</Button>
-          <Button variant="contained" onClick={handleAddExperience}>
-            Добавить
+          <Button onClick={() => setOpenModal(false)}>{t("cancel")}</Button>
+          <Button variant="contained" onClick={handleSaveExperience}>
+            {editingExperience !== null ? t("save_changes") : t("add")}
           </Button>
         </DialogActions>
       </Dialog>
