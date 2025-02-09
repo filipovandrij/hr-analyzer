@@ -34,6 +34,11 @@ import { useTranslation } from "react-i18next";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Autocomplete } from "@mui/material";
 import "../../locales/i18n";
+import EnFlag from "../../icons/flags/EnFlag";
+import UkFlag from "../../icons/flags/UkFlag";
+import RuFlag from "../../icons/flags/RuFlag";
+import GeFlag from "../../icons/flags/GeFlag";
+import DeFlag from "../../icons/flags/DeFlag";
 
 const skillOptions = [
   "JavaScript",
@@ -94,7 +99,13 @@ const AccountProfile = () => {
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
   };
+  const [language, setLanguage] = useState("en");
 
+  const handleChange = (event) => {
+    const selectedLanguage = event.target.value;
+    setLanguage(selectedLanguage);
+    changeLanguage(selectedLanguage);
+  };
   const validateFields = () => {
     let isValid = true;
 
@@ -405,11 +416,28 @@ const AccountProfile = () => {
 
       {tabValue === 2 && (
         <Box>
-          <Button onClick={() => changeLanguage("en")}>🇬🇧 English</Button>
-          <Button onClick={() => changeLanguage("uk")}>🇺🇦 Українська</Button>
-          <Button onClick={() => changeLanguage("ru")}>🇷🇺 Русский</Button>
-          <Button onClick={() => changeLanguage("ge")}>🇬🇪 ქართული</Button>
-          <Button onClick={() => changeLanguage("de")}>🇩🇪 Deutsch</Button>
+          <Select value={language} onChange={handleChange} displayEmpty>
+            <MenuItem value="en">
+              <EnFlag width="20" height="15" style={{ marginRight: 8 }} />
+              English
+            </MenuItem>
+            <MenuItem value="uk">
+              <UkFlag width="20" height="15" style={{ marginRight: 8 }} />
+              Українська
+            </MenuItem>
+            <MenuItem value="ru">
+              <RuFlag width="20" height="15" style={{ marginRight: 8 }} />
+              Русский
+            </MenuItem>
+            <MenuItem value="ge">
+              <GeFlag width="20" height="15" style={{ marginRight: 8 }} />
+              ქართული
+            </MenuItem>
+            <MenuItem value="de">
+              <DeFlag width="20" height="15" style={{ marginRight: 8 }} />
+              Deutsch
+            </MenuItem>
+          </Select>
         </Box>
       )}
 
