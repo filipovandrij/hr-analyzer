@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import Candidates from "../pages/Candidates";
 import Vacancies from "../pages/Vacancies";
+import VacancyDetail from "../pages/VacancyDetail";
 import AccountProfile from "../pages/account/AccountProfile";
 import Navbar from "../components/Navbar";
 import { Box } from "@mui/material";
@@ -24,6 +25,7 @@ const AppRouter = () => {
             <Route path="/" element={<Home />} />
             <Route path="/candidates" element={<Candidates />} />
             <Route path="/vacancies" element={<Vacancies />} />
+            <Route path="/vacancies/:id" element={<VacancyDetail />} />
             <Route path="/account" element={<AccountProfile />} />
           </Routes>
         </Box>

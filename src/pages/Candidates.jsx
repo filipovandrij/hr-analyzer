@@ -6,7 +6,7 @@ const Candidates = () => {
       <Helmet>
         <title>Кандидаты - Lumi</title>
       </Helmet>
-      <h1>Страница кандидатов</h1>;
+      <h1>Страница кандидатов</h1>
     </>
   );
 };
