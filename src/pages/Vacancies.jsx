@@ -1,5 +1,14 @@
+import { Helmet } from "react-helmet-async";
+
 const Vacancies = () => {
-  return <h1>Страница вакансий</h1>;
+  return (
+    <>
+      <Helmet>
+        <title>Вакансии - Lumi</title>
+      </Helmet>
+      <h1>Вакансии</h1>
+    </>
+  );
 };
 
 export default Vacancies;
