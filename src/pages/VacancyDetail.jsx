@@ -2,9 +2,24 @@ import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 const vacancies = [
-  { id: 1, title: "Frontend Developer", description: "React, TypeScript, Redux", details: "Full job description for Frontend Developer." },
-  { id: 2, title: "Backend Developer", description: "Node.js, Express, PostgreSQL", details: "Full job description for Backend Developer." },
-  { id: 3, title: "UI/UX Designer", description: "Figma, Adobe XD, UX research", details: "Full job description for UI/UX Designer." },
+  {
+    id: 1,
+    title: "Frontend Developer",
+    description: "React, TypeScript, Redux",
+    details: "Full job description for Frontend Developer.",
+  },
+  {
+    id: 2,
+    title: "Backend Developer",
+    description: "Node.js, Express, PostgreSQL",
+    details: "Full job description for Backend Developer.",
+  },
+  {
+    id: 3,
+    title: "UI/UX Designer",
+    description: "Figma, Adobe XD, UX research",
+    details: "Full job description for UI/UX Designer.",
+  },
 ];
 
 const VacancyDetail = () => {

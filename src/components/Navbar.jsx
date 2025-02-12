@@ -7,7 +7,7 @@ import {
   ListItemText,
   Avatar,
   Paper,
-  Divider,
+  Box,
 } from "@mui/material";
 import { Home, People, Work } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -21,111 +21,108 @@ const menuItems = [
 
 const Navbar = () => {
   const location = useLocation();
-
   const { t } = useTranslation();
 
   return (
-    <Paper
-      elevation={3}
+    <Box
       sx={{
-        width: 100,
-        height: "100vh",
+        width: "100%",
         display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "10px 0",
+        justifyContent: "center",
+        padding: "10px 0 0",
+        marginBottom: "10px",
         position: "fixed",
-        left: 0,
+        backgroundColor: "white",
         top: 0,
+        left: 0,
+        zIndex: 1100,
+        borderRadius: "12px",
       }}
     >
-      <Avatar
-        alt="Logo"
-        src="/hr_logo.png"
-        sx={{ width: 50, height: 50, mb: 2 }}
-      />
-      <Divider sx={{ width: "80%" }} />
-
-      <List
+      <Paper
+        elevation={3}
         sx={{
-          flexGrow: 1,
+          maxWidth: "1100px",
           width: "100%",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
+          justifyContent: "space-between",
+          padding: "10px 20px",
+          backgroundColor: "#fff",
+          borderRadius: "12px",
         }}
       >
-        {menuItems.map((item) => {
-          const isActive = location.pathname === item.path;
+        <Avatar alt="Logo" src="/hr_logo.png" sx={{ width: 50, height: 50 }} />
 
-          return (
-            <ListItem
-              key={item.text}
-              disablePadding
-              sx={{ width: "100%", display: "flex", justifyContent: "center" }}
-            >
-              <ListItemButton
-                component={Link}
-                to={item.path}
-                sx={{
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 1,
-                  minWidth: 60,
-                  padding: "10px 5px",
-                  textAlign: "center",
-                  backgroundColor: isActive ? "#CDCAC0" : "transparent",
-                  borderRadius: "8px",
-                  animation: isActive
-                    ? "pulse 1.5s infinite alternate"
-                    : "none",
-                  "@keyframes pulse": {
-                    "0%": { backgroundColor: "#CDCAC0" },
-                    "100%": { backgroundColor: "#BFBBA5" },
-                  },
-                }}
-              >
-                <ListItemIcon
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 2,
+          }}
+        >
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <ListItem key={item.text} disablePadding>
+                <ListItemButton
+                  component={Link}
+                  to={item.path}
                   sx={{
-                    minWidth: "auto",
-                    color: isActive ? "black" : "inherit",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 1,
+                    padding: "8px 15px",
+                    backgroundColor: isActive ? "#CDCAC0" : "transparent",
+                    borderRadius: "8px",
+                    animation: isActive
+                      ? "pulse 1.5s infinite alternate"
+                      : "none",
+                    "@keyframes pulse": {
+                      "0%": { backgroundColor: "#CDCAC0" },
+                      "100%": { backgroundColor: "#BFBBA5" },
+                    },
                   }}
                 >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={t(`${item.text}`)}
-                  sx={{
-                    textAlign: "center",
-                    fontSize: "12px",
-                    whiteSpace: "nowrap",
-                    color: isActive ? "black" : "inherit",
-                    fontWeight: isActive ? "bold" : "normal",
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: "auto",
+                      color: isActive ? "black" : "inherit",
+                    }}
+                  >
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={t(`${item.text}`)}
+                    sx={{
+                      textAlign: "center",
+                      fontSize: "14px",
+                      color: isActive ? "black" : "inherit",
+                      fontWeight: isActive ? "bold" : "normal",
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </List>
 
-      <Divider sx={{ width: "80%" }} />
-      <Link to="/account" style={{ textDecoration: "none" }}>
-        <Avatar
-          alt={t("profile")}
-          src="/homer.png"
-          sx={{
-            width: 50,
-            height: 50,
-            mb: 2,
-            mt: "auto",
-            cursor: "pointer",
-            transition: "transform 0.2s",
-            "&:hover": { transform: "scale(1.1)" },
-          }}
-        />
-      </Link>
-    </Paper>
+        <Link to="/account" style={{ textDecoration: "none" }}>
+          <Avatar
+            alt={t("profile")}
+            src="/homer.png"
+            sx={{
+              width: 50,
+              height: 50,
+              cursor: "pointer",
+              transition: "transform 0.2s",
+              "&:hover": { transform: "scale(1.1)" },
+            }}
+          />
+        </Link>
+      </Paper>
+    </Box>
   );
 };
 
