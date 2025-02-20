@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useState } from "react";
+import { usePostVacancyMutation } from "../redux/services/vacancyApi";
 import {
   TextField,
   Checkbox,
@@ -16,6 +17,8 @@ import "react-toastify/dist/ReactToastify.css";
 const locationOptions = ["Remote", "On-site", "Hybrid", "Relocate"];
 
 const VacancyForm = () => {
+  const [postVacancy] = usePostVacancyMutation();
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -61,38 +64,24 @@ const VacancyForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    try {
-      const response = await fetch(
-        "http://localhost:9000/api/v1/vacancy/post",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      toast.success("Вакансия успешно опубликована!");
-      console.log("Success:", result);
-      setFormData({
-        title: "",
-        description: "",
-        company: "",
-        views: 0,
-        applications: 0,
-        employment_options: [],
-        fulltime: true,
+    postVacancy(formData)
+      .unwrap()
+      .then(() => {
+        toast.success("Вакансия успешно опубликована!");
+        setFormData({
+          title: "",
+          description: "",
+          company: "",
+          views: 0,
+          applications: 0,
+          employment_options: [],
+          fulltime: true,
+        });
+      })
+      .catch((err) => {
+        toast.error(`Ошибка: ${err}`);
       });
-    } catch (error) {
-      toast.error("Ошибка при отправке вакансии");
-      console.error("Fetch error:", error);
-    }
   };
 
   return (
@@ -157,14 +146,7 @@ const VacancyForm = () => {
           </Button>
         </Box>
       </Container>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnHover
-        draggable
-      />
+      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 };

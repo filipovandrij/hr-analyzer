@@ -25,11 +25,13 @@ const VacancyInfo = ({ vacancy }) => {
         arrow
         followCursor
       >
-        Опубликовано:{" "}
-        {formatDistanceToNow(createdDate, {
-          locale: currentLocale,
-          addSuffix: true,
-        })}
+        <span>
+          Опубликовано:{" "}
+          {formatDistanceToNow(createdDate, {
+            locale: currentLocale,
+            addSuffix: true,
+          })}
+        </span>
       </Tooltip>
     </Typography>
   );

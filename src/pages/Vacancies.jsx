@@ -18,7 +18,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { useGetVacanciesMutation } from "../redux/services/vacancyApi";
 import VacancyInfo from "../components/VacanciesList/VacancyInfo";
 
 const truncateText = (text = "", length, isExpanded, toggleFunc, id) => {
@@ -51,24 +51,17 @@ const truncateText = (text = "", length, isExpanded, toggleFunc, id) => {
 };
 
 const Vacancies = () => {
+  const [getVacancies, { isLoading, error }] = useGetVacanciesMutation();
   const [vacancies, setVacancies] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
-  const [filterLocation, setFilterLocation] = useState([]); // Изначально пустой массив
-  const [filterFullTime, setFilterFullTime] = useState(false); // Фильтр по типу занятости
+  const [filterLocation, setFilterLocation] = useState([]);
+  const [filterFullTime, setFilterFullTime] = useState(false);
 
   useEffect(() => {
-    const fetchVacancies = async () => {
-      try {
-        const response = await axios.post(
-          "http://localhost:9000/api/v1/vacancy/list",
-          {}
-        );
-        setVacancies(response.data.items);
-      } catch (error) {
-        console.error("Ошибка загрузки вакансий:", error);
-      }
-    };
-    fetchVacancies();
+    getVacancies()
+      .unwrap()
+      .then((res) => setVacancies(res.items || []))
+      .catch((err) => console.error("Ошибка загрузки вакансий:", err));
   }, []);
 
   const toggleDescription = (id) => {
