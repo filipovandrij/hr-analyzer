@@ -29,7 +29,6 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import DeleteIcon from "@mui/icons-material/Delete";
 import i18n from "i18next";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import EditIcon from "@mui/icons-material/Edit";
 import { useTranslation } from "react-i18next";
 import UploadFileIcon from "@mui/icons-material/UploadFile";

@@ -17,6 +17,7 @@ const menuItems = [
   { text: "home", icon: <Home />, path: "/" },
   { text: "candidates", icon: <People />, path: "/candidates" },
   { text: "vacancies", icon: <Work />, path: "/vacancies" },
+  { text: "vacancyform", icon: <Work />, path: "/vacancyform" },
 ];
 
 const Navbar = () => {
